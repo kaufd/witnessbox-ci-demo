@@ -1,0 +1,49 @@
+name: ebt-tests
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ebt-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить исходники
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Настроить Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+
+      - name: Установить witnessbox
+        uses: kaufd/WitnessBox/actions/setup@b8336507e9e3f467fd01f142d9756181ed4dbb09 # коммит D45
+        with:
+          version: "0.5.2"
+
+      - name: Запустить гейт
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set +e
+          ebt-gate ebt . "$RUNNER_TEMP/run"
+          rc=$?
+          echo "ebt-gate завершился с кодом $rc; вердикт этой стадии не доверенный"
+          exit 0
+
+      - name: Выгрузить свидетельства и gate.json
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: witnessbox-evidence
+          path: |
+            ${{ runner.temp }}/run/out/*.jsonl
+            ${{ runner.temp }}/run/gate.json
+          if-no-files-found: error
