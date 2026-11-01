@@ -63,3 +63,5 @@ partitions = ["zero", "positive", "negative"]
 #   ["confirmed", "pay", "paying"],
 #   ["paying", "paid", "done"],
 # ]
+
+# acceptance: изменение защищённой spec в PR
