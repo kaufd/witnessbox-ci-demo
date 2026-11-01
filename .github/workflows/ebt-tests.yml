@@ -38,6 +38,10 @@ jobs:
           echo "ebt-gate завершился с кодом $rc; вердикт этой стадии не доверенный"
           exit 0
 
+      - name: Дать фоновому процессу переписать gate.json
+        if: always()
+        run: sleep 5
+
       - name: Выгрузить свидетельства и gate.json
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
