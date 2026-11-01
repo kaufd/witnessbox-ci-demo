@@ -23,3 +23,5 @@ ebt-gate ebt . build/ebt/run
 `.github/workflows/ebt-tests.yml` — первая, недоверенная стадия.
 `.github/workflows/ebt-verify.yml` — вторая, доверенная стадия; она берётся из
 основной ветки и ставит `witnessbox/gate`.
+
+Демонстрационное изменение для приёмки CI-режима.
