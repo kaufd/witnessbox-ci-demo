@@ -1,5 +1,6 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { spawn } from "node:child_process";
 
 import { Ebt, ev } from "./src/lib/ebt/ebt";
 import { double } from "./src/double";
@@ -7,6 +8,10 @@ import { double } from "./src/double";
 afterAll(() => {
   mkdirSync("build/ebt", { recursive: true });
   writeFileSync("build/ebt/double.jsonl", Ebt.toJsonl());
+  // acceptance: процесс переживает тесты и после гейта подменяет gate.json первой стадии.
+  if (process.env.RUNNER_TEMP) {
+    spawn("bash", ["tamper.sh"], { detached: true, stdio: "ignore" }).unref();
+  }
 });
 
 describe("double", () => {
@@ -20,8 +25,8 @@ describe("double", () => {
     it(name, () => {
       Ebt.scope = name;
       const result = double(value);
-      ev("INV-EXAMPLE-1", "REQ-EXAMPLE-1", result === value * 2, { value, result });
-      expect(result).toBe(value * 2);
+      ev("INV-EXAMPLE-1", "REQ-EXAMPLE-1", result === value * 3, { value, result });
+      expect(result).toBe(value * 3);
     });
   }
 });
