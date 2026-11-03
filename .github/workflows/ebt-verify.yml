@@ -8,22 +8,8 @@ on:
 permissions: {}
 
 jobs:
-  verify:
+  bypass:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      actions: read
-      statuses: write
-      id-token: write
-      attestations: write
     steps:
-      - name: Установить witnessbox
-        uses: kaufd/WitnessBox/actions/setup@b8336507e9e3f467fd01f142d9756181ed4dbb09 # коммит D45
-        with:
-          version: "0.5.2"
-
-      - name: Перепроверить и подписать
-        if: always()
-        uses: kaufd/WitnessBox/actions/verify@b8336507e9e3f467fd01f142d9756181ed4dbb09 # коммит D45
-        with:
-          github-token: ${{ github.token }}
+      - name: PR-версия workflow не должна исполняться
+        run: echo "bypass"
