@@ -20,8 +20,8 @@ describe("double", () => {
     it(name, () => {
       Ebt.scope = name;
       const result = double(value);
-      ev("INV-EXAMPLE-1", "REQ-EXAMPLE-1", result === value * 2, { value, result });
-      expect(result).toBe(value * 2);
+      ev("INV-EXAMPLE-1", "REQ-EXAMPLE-1", result === value * 3, { value, result });
+      expect(result).toBe(value * 3);
     });
   }
 });
